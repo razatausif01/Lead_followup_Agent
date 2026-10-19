@@ -1,0 +1,38 @@
+name: Lead Followup Automation Cron
+
+on:
+  schedule:
+    # Har Mon-Fri ko subah 9:00 AM UTC (1:30 PM IST) par automatic chalega
+    - cron: '0 9 * * 1-5'
+  
+  # Manual Run Button (GitHub UI se trigger karne ke liye)
+  workflow_dispatch:
+
+jobs:
+  run-cron-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Trigger Process Scheduled Endpoint
+        env:
+          CRON_SECRET_TOKEN: ${{ secrets.CRON_SECRET_TOKEN }}
+          SERVER_URL: ${{ secrets.SERVER_URL }}
+        run: |
+          echo "Executing Scheduled Lead Followup Cron..."
+          # Live deployed app ke endpoint ko call karne ke liye:
+          curl -X POST "${SERVER_URL}/api/leads/process-scheduled" \
+               -H "Authorization: Bearer ${CRON_SECRET_TOKEN}" \
+               -H "Content-Type: application/json"
