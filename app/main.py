@@ -1,23 +1,21 @@
 from contextlib import asynccontextmanager
-
 from fastapi import Depends, FastAPI
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-# Ab saari files 'app' folder ke andar hain, isliye 'app.' lagana zaroori hai
+# IMPORTS UPDATE KIYE HAIN (app. laga diya hai)
 from app.database import get_db, init_db
-from app.api.leads import router as leads_router  # Kyunki leads.py 'app/api' ke andar hai
-
+from app.config import get_settings 
+# Agar leads.py app folder mein hi hai toh:
+from app.leads import router as leads_router 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
     yield
 
-
 app = FastAPI(title="LeadFlow Agent", lifespan=lifespan)
 app.include_router(leads_router)
-
 
 @app.get("/health")
 def health(db: Session = Depends(get_db)):
