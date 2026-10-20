@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db, init_db
 from app.config import get_settings 
 # Agar leads.py app folder mein hi hai toh:
-from app.leads import router as leads_router 
+from app.api.leads import router as leads_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
