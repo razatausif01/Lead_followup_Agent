@@ -4,8 +4,9 @@ from fastapi import Depends, FastAPI
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from app.core.database import get_db, init_db
-from app.api.leads import router as leads_router
+# Yahan 'app.' hata diya hai kyunki files seedhe root mein hain
+from database import get_db, init_db
+from leads import router as leads_router  # Agar leads.py root mein hai toh
 
 
 @asynccontextmanager
