@@ -1,7 +1,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-from app.config import get_settings
+# 'app.' hata kar direct config se import kiya
+from config import get_settings
 
 engine = create_engine(get_settings().DATABASE_URL, pool_pre_ping=True)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
@@ -17,5 +18,6 @@ def get_db():
 
 
 def init_db():
-    import app.models  # tables register hone ke liye
+    # 'app.' hata kar direct models import kiya (agar models.py hai toh)
+    import models  # tables register hone ke liye
     Base.metadata.create_all(bind=engine)
